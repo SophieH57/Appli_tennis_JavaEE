@@ -19,7 +19,7 @@
         <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Lister</a>
         <div class="dropdown-menu" aria-labelledby="dropdown01">
           <a class="dropdown-item" href="/Appli_tennis/ListJoueur">Lister les joueurs</a>
-          <a class="dropdown-item" href="">Lister les tournois</a>
+          <a class="dropdown-item" href="/Appli_tennis/ListTournois">Lister les tournois</a>
           <a class="dropdown-item" href="#">Lister les  matchs</a>
         </div>
       </li>

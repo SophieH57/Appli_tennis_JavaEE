@@ -18,12 +18,6 @@ public class JoueurDaoImpl implements JoueurDao {
 		super();
 		this.daoFactory = daoFactory;
 	}
-		
-	@Override
-	public void ajouter(Joueur joueur) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	public List<Joueur> lister() {
@@ -107,5 +101,6 @@ public class JoueurDaoImpl implements JoueurDao {
 			System.out.println(e);
 		}
 	}
+
 
 }
