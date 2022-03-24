@@ -68,7 +68,6 @@ public class JoueurDaoImpl implements JoueurDao {
 				joueurAModif.setPrenom(rs.getString("joueur.prenom"));
 				joueurAModif.setSexe(rs.getString("joueur.sexe"));
 			}
-			System.out.println(joueurAModif.getNom());
 		}
 		catch (Exception e){	
 		}

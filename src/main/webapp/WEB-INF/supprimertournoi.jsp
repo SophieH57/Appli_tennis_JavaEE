@@ -9,7 +9,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="starter-template.css">
-    <title>Supprimer un joueur</title>
+    <title>Supprimer un tournoi</title>
   </head>
   <body>
     <%@ include file="menu.jsp" %>
@@ -17,22 +17,22 @@
 <main role="main" class="container">
 
   <div class="starter-template">
-    <h1>Supprimer un joueur</h1>
+    <h1>Supprimer un tournoi</h1>
     <p class="lead"><c:if test="${ !empty erreur }"><p style="color:red;"><c:out value="${ erreur }" /></p></c:if>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
   </div>
    <div style="width:40%; margin:auto;"></div>
 
-<form class="needs-validation " novalidate method="post" action="SupprimerJoueur">
+<form class="needs-validation " novalidate method="post" action="SupprimerTournoi">
   <div class="form-row">
     <div class="col-md-4 mb-3">
-		<label for="deleteId">ID du joueur</label>
-		<input type="number" class="form-control" style="width:400px;" id="deleteId" name="deleteId" value="${joueur.id}" readonly="readonly" required>
+		<label for="deleteIdTournoi">ID du tournoi</label>
+		<input type="number" class="form-control" style="width:400px;" id="deleteIdTournoi" name="deleteIdTournoi" value="${tournoi.idTournoi}" readonly="readonly" required>
       </div>
   </div>
   <div class="form-row">
     <div class="col-md-4 mb-3">
-      <label for="deleteNom">Nom du joueur</label>
-      <input type="text" class="form-control" style="width:400px;" id="deleteNom" name="deleteNom" value="${joueur.nom}" readonly="readonly" required>
+      <label for="deleteNomTournoi">Nom du tournoi</label>
+      <input type="text" class="form-control" style="width:400px;" id="deleteNomTournoi" name="deleteNomTournoi" value="${tournoi.nomTournoi}" required>
 		  <div class="valid-feedback">
         Très bien!
       </div>
@@ -40,34 +40,15 @@
   </div> 
   <div class="form-row">
 	<div class="col-md-4 mb-3">
-	  <label for="deletePrenom">Prénom du joueur</label>
-	  <input type="text" class="form-control" style="width:400px;" id="deletePrenom" name="deletePrenom" value="${joueur.prenom}" readonly="readonly" required>
+	  <label for="deleteCodeTournoi">Code du tournoi</label>
+	  <input type="text" class="form-control" style="width:400px;" id="deleteCodeTournoi" name="deleteCodeTournoi" value="${tournoi.codeTournoi}" required>
 	  <div class="valid-feedback">
        Très bien!
      </div>
 	</div>
    </div> 
-  <div class="form-row">
-    <div class="col-md-3 mb-3">
-      <label for="deleteSexe">Sexe</label>
-      <select class="custom-select" id="deleteSexe" name="deleteSexe" style="width:400px;" required> 
-      	<c:if test="${joueur.sexe == 'F'}" var="selected">
-    		<option selected value='F'>Femme</option>
-      	</c:if>
-      	<c:if test="${!selected}">
-			<option selected value='H'>Homme</option>
-      	</c:if>
-      </select>
-	   <div class="valid-feedback">
-       Très bien!
-     </div>
-      <div class="invalid-feedback">
-        Veuillez choisir un sexe!
-      </div>
-    </div>  
-    </div>
   
-  <button class="btn btn-primary center" type="submit">Supprimer ce joueur</button>
+  <button class="btn btn-primary center" type="submit">Supprimer ce tournoi</button>
 </form>
 
 </main><!-- /.container -->

@@ -8,6 +8,6 @@ public interface TournoiDao {
 	List <Tournoi> lister();
 	Tournoi lecture(Long id);
 	void ajouterTournoi(Tournoi nouveauTournoi);
-	void updateTournoi(Long id, String nom, String prenom, String sexe);
+	void updateTournoi(Long id, String nom, String code);
 	void deleteTournoi(Long id);
 }
