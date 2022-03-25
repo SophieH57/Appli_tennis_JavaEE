@@ -10,4 +10,5 @@ public interface TournoiDao {
 	void ajouterTournoi(Tournoi nouveauTournoi);
 	void updateTournoi(Long id, String nom, String code);
 	void deleteTournoi(Long id);
+	List <Tournoi> rechercher (String txt);
 }

@@ -6,6 +6,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.mycompany.beans.User;
 import com.mycompany.dao.DaoFactory;
@@ -49,7 +50,11 @@ public class Login extends HttpServlet {
 		String login = request.getParameter("txtLogin");
 		String password = request.getParameter("txtPassword");
 		User connectedUser = userDaoImpl.isValidLogin(login, password);
+		HttpSession session = request.getSession();
+		String typePage = "pageJoueur";
 		if (connectedUser != null){
+			session.setAttribute("utilisateur", connectedUser);
+			session.setAttribute("page", typePage);
 			response.sendRedirect("/Appli_tennis/ListJoueur");
 		}
 		else this.getServletContext().getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);

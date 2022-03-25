@@ -17,6 +17,7 @@ import com.mycompany.dao.MatchDaoImpl;
 public class ListMatchs extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	MatchDaoImpl mdi;
+	String typePage = "pageMatch";
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -39,6 +40,7 @@ public class ListMatchs extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setAttribute("listeMatchs", mdi.lister());
+		request.getSession().setAttribute("page", typePage);
 		this.getServletContext().getRequestDispatcher("/WEB-INF/listmatchs.jsp").forward(request, response);
 	}
 

@@ -18,6 +18,7 @@ import com.mycompany.dao.JoueurDaoImpl;
 public class ListJoueur extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	JoueurDaoImpl jdi;
+	String typePage = "pageJoueur";
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -40,6 +41,7 @@ public class ListJoueur extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setAttribute("liste", jdi.lister());
+		request.getSession().setAttribute("page", typePage);
 		this.getServletContext().getRequestDispatcher("/WEB-INF/listjoueur.jsp").forward(request, response);
 	}
 
@@ -47,8 +49,8 @@ public class ListJoueur extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
+		request.setAttribute("liste", jdi.rechercher(request.getParameter("txtsearch")));
+		this.getServletContext().getRequestDispatcher("/WEB-INF/listjoueur.jsp").forward(request, response);
 	}
 
 }

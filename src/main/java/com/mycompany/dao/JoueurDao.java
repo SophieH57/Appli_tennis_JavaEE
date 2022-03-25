@@ -10,4 +10,5 @@ public interface JoueurDao {
 	void ajouterJoueur(Joueur nouveauJoueur);
 	void updateJoueur(Long id, String nom, String prenom, String sexe);
 	void deleteJoueur(Long id);
+	List <Joueur> rechercher(String txt);
 }

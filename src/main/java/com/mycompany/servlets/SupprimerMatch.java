@@ -8,20 +8,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.mycompany.dao.DaoFactory;
-import com.mycompany.dao.JoueurDaoImpl;
+import com.mycompany.dao.MatchDaoImpl;
 
 /**
- * Servlet implementation class SupprimerJoueur
+ * Servlet implementation class SupprimerMatch
  */
-@WebServlet("/SupprimerJoueur")
-public class SupprimerJoueur extends HttpServlet {
+@WebServlet("/SupprimerMatch")
+public class SupprimerMatch extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	JoueurDaoImpl jdi;
-	
+	MatchDaoImpl mdi;
+       
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public SupprimerJoueur() {
+    public SupprimerMatch() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -30,23 +30,24 @@ public class SupprimerJoueur extends HttpServlet {
     public void init() throws ServletException {
     	// TODO Auto-generated method stub
     	super.init();
-        DaoFactory daoF = DaoFactory.getInstance(); //création instance DaoFactory  
-        jdi = new JoueurDaoImpl(daoF);
+    	DaoFactory daoF = DaoFactory.getInstance();
+    	mdi = new MatchDaoImpl(daoF);
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		jdi.deleteJoueur(Long.parseLong(request.getParameter("id")));
-		response.sendRedirect("/Appli_tennis/ListJoueur");
+		mdi.deleteMatch(Long.parseLong(request.getParameter("id")));
+		response.sendRedirect("/Appli_tennis/ListMatchs");
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.sendRedirect("/Appli_tennis/ListJoueur");		
+		// TODO Auto-generated method stub
+		doGet(request, response);
 	}
 
 }

@@ -13,4 +13,5 @@ public interface MatchDao {
 	void ajouterMatch(Match nouveauMatch);
 	public void updateMatch(Long id, Tournoi tournoi, int annee, String typeEpreuve, Joueur vainqueur, Joueur finaliste);
 	void deleteMatch(Long id);
+	List <Match> rechercher(String txt);
 }

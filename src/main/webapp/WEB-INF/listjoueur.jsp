@@ -15,11 +15,12 @@
   <body>
 <%@ include file="menu.jsp" %>
 <main role="main" class="container">
-
+  
   <div class="starter-template">
     <h1>Liste des joueurs</h1>
     <p class="lead">Bienvenue .... Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolor.</p>
   </div>
+
 
 </main><!-- /.container -->
 <div class="container">
@@ -28,6 +29,10 @@
 <a class="btn btn-primary" href="/Appli_tennis/AjouterJoueur" role="button">Ajouter un joueur</a>
 </div>
 
+    <p><c:if test="${liste[0] == null}"><strong>Aucun joueur ne correspond à votre recherche</strong></c:if></p>
+    
+    <c:if test="${liste[0] != null }">
+    
 <table class="table">
   <thead>
     <tr>
@@ -40,21 +45,21 @@
   </thead>
   <tbody>
    
-    <c:forEach var="joueur" items="${liste}">
-    <tr>
-      <th ><c:out value="${joueur.getId()}"></c:out></th>
-      <td ><c:out value="${joueur.getNom()}"></c:out></td>
-      <td ><c:out value="${joueur.getPrenom()}"></c:out></td>
-      <td ><c:out value="${joueur.getSexe()}"></c:out></td>
-	  <td>
-	    <a type="submit" class="btn btn-outline-primary" href="/Appli_tennis/ModifierJoueur?id=${joueur.getId()}" role="button">Modifier</a>
-		<a type="submit" class="btn btn-outline-primary" href="/Appli_tennis/SupprimerJoueur?id=${joueur.getId()}" role="button">Supprimer</a>
-	  </td>
-    </tr>
-    </c:forEach>
-
+	    <c:forEach var="joueur" items="${liste}">
+	    <tr>
+	      <th ><c:out value="${joueur.getId()}"></c:out></th>
+	      <td ><c:out value="${joueur.getNom()}"></c:out></td>
+	      <td ><c:out value="${joueur.getPrenom()}"></c:out></td>
+	      <td ><c:out value="${joueur.getSexe()}"></c:out></td>
+		  <td>
+		    <a type="submit" class="btn btn-outline-primary" href="/Appli_tennis/ModifierJoueur?id=${joueur.getId()}" role="button">Modifier</a>
+			<a type="submit" class="btn btn-outline-primary" href="/Appli_tennis/SupprimerJoueur?id=${joueur.getId()}" role="button">Supprimer</a>
+		  </td>
+	    </tr>
+	    </c:forEach>
   </tbody>
 </table>
+	</c:if>
 </div>
 
     <!-- Optional JavaScript -->

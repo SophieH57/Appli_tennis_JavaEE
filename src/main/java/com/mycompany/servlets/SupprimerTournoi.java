@@ -37,16 +37,14 @@ public class SupprimerTournoi extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Long idTournoiASupprimer = Long.parseLong(request.getParameter("id"));
-		request.setAttribute("tournoi", tdi.lecture(idTournoiASupprimer));
-		this.getServletContext().getRequestDispatcher("/WEB-INF/supprimertournoi.jsp").forward(request, response);
+		tdi.deleteTournoi(Long.parseLong(request.getParameter("id")));
+		response.sendRedirect("/Appli_tennis/ListTournois");
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		tdi.deleteTournoi(Long.parseLong(request.getParameter("deleteIdTournoi")));
 		response.sendRedirect("/Appli_tennis/ListTournois");	
 	}
 

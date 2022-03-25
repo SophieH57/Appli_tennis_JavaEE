@@ -28,31 +28,35 @@
 <a class="btn btn-primary" href="/Appli_tennis/AjouterTournoi" role="button">Ajouter un tournoi</a>
 </div>
 
-<table class="table">
-  <thead>
-    <tr>
-      <th scope="col" style="width:10%">#</th>
-      <th scope="col" style="width:25%">Code</th>
-      <th scope="col" style="width:20%">Nom</th>
-	  <th scope="col" style="width:20%"></th>
-    </tr>
-  </thead>
-  <tbody>
-   
-    <c:forEach var="tournoi" items="${listeTournois}">
-    <tr>
-      <th ><c:out value="${tournoi.idTournoi}"></c:out></th>
-      <td ><c:out value="${tournoi.codeTournoi}"></c:out></td>
-      <td ><c:out value="${tournoi.nomTournoi}"></c:out></td>
-	  <td>
-	    <a type="submit" class="btn btn-outline-primary" href="/Appli_tennis/ModifierTournoi?id=${tournoi.idTournoi}" role="button">Modifier</a>
-		<a type="submit" class="btn btn-outline-primary" href="/Appli_tennis/SupprimerTournoi?id=${tournoi.idTournoi}" role="button">Supprimer</a>
-	  </td>
-    </tr>
-    </c:forEach>
+<p> <c:if test="${listeTournois[0] == null}"><strong>Aucun tournoi ne correspond à votre recherche</strong></c:if></p>
 
-  </tbody>
-</table>
+<c:if test="${listeTournois[0] != null}">
+	<table class="table">
+	  <thead>
+	    <tr>
+	      <th scope="col" style="width:10%">#</th>
+	      <th scope="col" style="width:25%">Code</th>
+	      <th scope="col" style="width:20%">Nom</th>
+		  <th scope="col" style="width:20%"></th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	   
+	    <c:forEach var="tournoi" items="${listeTournois}">
+	    <tr>
+	      <th ><c:out value="${tournoi.idTournoi}"></c:out></th>
+	      <td ><c:out value="${tournoi.codeTournoi}"></c:out></td>
+	      <td ><c:out value="${tournoi.nomTournoi}"></c:out></td>
+		  <td>
+		    <a type="submit" class="btn btn-outline-primary" href="/Appli_tennis/ModifierTournoi?id=${tournoi.idTournoi}" role="button">Modifier</a>
+			<a type="submit" class="btn btn-outline-primary" href="/Appli_tennis/SupprimerTournoi?id=${tournoi.idTournoi}" role="button">Supprimer</a>
+		  </td>
+	    </tr>
+	    </c:forEach>
+	
+	  </tbody>
+	</table>
+</c:if>
 </div>
 
     <!-- Optional JavaScript -->

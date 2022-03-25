@@ -22,16 +22,18 @@ public class MatchDaoImpl implements MatchDao{
 		this.daoFactory = daoFactory;
 	}
 	
+	//Récupérer la liste de tous les matchs
 	@Override
 	public List<Match> lister() {
 		ArrayList<Match> listeMatchs= new ArrayList<Match>();
 		try {
 			connexion = daoFactory.getConnection();
-			String sql = "select match_tennis.ID, epreuve.TYPE_EPREUVE, epreuve.ANNEE, tournoi.ID, tournoi.NOM, tournoi.code, match_tennis.ID_VAINQUEUR, match_tennis.ID_FINALISTE, joueur.ID, joueur.NOM, joueur.PRENOM "
+			String sql1 = "select match_tennis.ID, epreuve.TYPE_EPREUVE, epreuve.ANNEE, tournoi.ID, tournoi.NOM, tournoi.code, match_tennis.ID_VAINQUEUR, match_tennis.ID_FINALISTE, joueur.ID, joueur.NOM, joueur.PRENOM "
 					+ "from match_tennis inner join joueur inner join epreuve inner join tournoi "
 					+ "where match_tennis.ID_EPREUVE = epreuve.ID and epreuve.ID_TOURNOI = tournoi.ID and match_tennis.ID_VAINQUEUR = joueur.ID";
-			statement = connexion.prepareStatement(sql);
-			ResultSet rs = statement.executeQuery();
+			PreparedStatement matchTournoiVainqueur = connexion.prepareStatement(sql1);
+			ResultSet rs = matchTournoiVainqueur.executeQuery();
+			PreparedStatement matchFinaliste = connexion.prepareStatement("select * from joueur where ID = ?");
 			while (rs.next()) {
 				Match m = new Match();
 				Joueur v = new Joueur();
@@ -52,8 +54,15 @@ public class MatchDaoImpl implements MatchDao{
 				v.setNom(rs.getString("joueur.nom"));
 				v.setPrenom(rs.getString("joueur.prenom"));
 				
-				//récupération id finaliste
+				//récupération infos finaliste
 				f.setId(rs.getLong("match_tennis.id_finaliste"));
+				matchFinaliste.setLong(1, f.getId());
+				ResultSet rsF = matchFinaliste.executeQuery();
+				if (rsF.next()) {
+					f.setNom(rsF.getString("joueur.nom"));
+					f.setPrenom(rsF.getString("joueur.prenom"));
+					f.setSexe(rsF.getString("joueur.sexe"));
+				}
 				
 				//ajout infos tournoi, vainqueur et id finaliste au match
 				m.setTournoi(t);
@@ -67,30 +76,11 @@ public class MatchDaoImpl implements MatchDao{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		//recherche et ajout des infos du finaliste du match à partir de l'id
-		for (Match match : listeMatchs) {
-			Long idFinaliste = match.getFinaliste().getId();
-			try {
-				connexion = daoFactory.getConnection();
-				String sql = "select * from joueur where ID = " + idFinaliste;
-				statement = connexion.prepareStatement(sql);
-				ResultSet rs = statement.executeQuery();
-				if (rs.next()) {
-					match.getFinaliste().setNom(rs.getString("joueur.nom"));
-					match.getFinaliste().setPrenom(rs.getString("joueur.prenom"));
-					match.getFinaliste().setSexe(rs.getString("joueur.sexe"));
-				}
-				
-			}catch (Exception e) {
-				e.printStackTrace();
-			}
-			
-		}
-			
+					
 		return listeMatchs;
 	}
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//Récupérer les information d'un match par son id
 	@Override
 	public Match lecture(Long id) {
 		Match m = new Match();
@@ -102,9 +92,10 @@ public class MatchDaoImpl implements MatchDao{
 			String sql = "select match_tennis.ID, epreuve.TYPE_EPREUVE, epreuve.ANNEE, tournoi.ID, tournoi.NOM, tournoi.code, match_tennis.ID_VAINQUEUR, match_tennis.ID_FINALISTE, joueur.ID, joueur.NOM, joueur.PRENOM "
 					+ "from match_tennis inner join joueur inner join epreuve inner join tournoi "
 					+ "where match_tennis.ID_EPREUVE = epreuve.ID and epreuve.ID_TOURNOI = tournoi.ID and match_tennis.ID_VAINQUEUR = joueur.ID and match_tennis.ID = ?";
-			PreparedStatement pstmt = connexion.prepareStatement(sql);
-			pstmt.setLong(1, id);
-			ResultSet rs = pstmt.executeQuery();
+			PreparedStatement infoMatch = connexion.prepareStatement(sql);
+			infoMatch.setLong(1, id);
+			PreparedStatement infoFinaliste = connexion.prepareStatement("select * from joueur where ID = ?");
+			ResultSet rs = infoMatch.executeQuery();
 			while (rs.next()) {
 				//récupération infos match
 				m.setIdMatch(rs.getLong("match_tennis.id"));
@@ -123,6 +114,13 @@ public class MatchDaoImpl implements MatchDao{
 				
 				//récupération id finaliste
 				f.setId(rs.getLong("match_tennis.id_finaliste"));
+				infoFinaliste.setLong(1, f.getId());
+				ResultSet rsF = infoFinaliste.executeQuery();
+				if (rsF.next()) {
+					f.setNom(rsF.getString("joueur.nom"));
+					f.setPrenom(rsF.getString("joueur.prenom"));
+					f.setSexe(rsF.getString("joueur.sexe"));
+				}
 				
 				//ajout infos tournoi, vainqueur et id finaliste au match
 				m.setTournoi(t);
@@ -132,74 +130,50 @@ public class MatchDaoImpl implements MatchDao{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		//récupération des infos du finaliste grâce à son id
-		Long idFinaliste = m.getFinaliste().getId();
-		try {
-			connexion = daoFactory.getConnection();
-			String sql = "select * from joueur where ID = " + idFinaliste;
-			statement = connexion.prepareStatement(sql);
-			ResultSet rs = statement.executeQuery();
-			if (rs.next()) {
-				m.getFinaliste().setNom(rs.getString("joueur.nom"));
-				m.getFinaliste().setPrenom(rs.getString("joueur.prenom"));
-				m.getFinaliste().setSexe(rs.getString("joueur.sexe"));
-			}
-			
-		}catch (Exception e) {
-			e.printStackTrace();
-		}
-		
+				
 		return m;
 	}
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//Ajouter un nouveau match
 	@Override
 	public void ajouterMatch(Match nouveauMatch) {
+		int idNouvelleEpreuve = 0;
 		//création d'une nouvelle épreuve avec année, type d'épreuve et id du tournoi
 		try {
 			connexion = daoFactory.getConnection();
 			String sqlTableEpreuve = "insert into epreuve (annee, type_epreuve, id_tournoi) values (?,?,?)";
-			PreparedStatement pstmt = connexion.prepareStatement(sqlTableEpreuve);
-			pstmt.setInt(1, nouveauMatch.getAnnee());
-			pstmt.setString(2, nouveauMatch.getTypeEpreuve());
-			pstmt.setInt(3, nouveauMatch.getTournoi().getIdTournoi());
-			pstmt.executeUpdate();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+			PreparedStatement modifTableEpreuve = connexion.prepareStatement(sqlTableEpreuve);
+			modifTableEpreuve.setInt(1, nouveauMatch.getAnnee());
+			modifTableEpreuve.setString(2, nouveauMatch.getTypeEpreuve());
+			modifTableEpreuve.setInt(3, nouveauMatch.getTournoi().getIdTournoi());
+			modifTableEpreuve.executeUpdate();
 		
 		//récupération de l'id de l'épreuve nouvellement créée
-		int idNouvelleEpreuve = 0;
-		try {
-			connexion = daoFactory.getConnection();
-			String sqlIdEpreuve = "select epreuve.id from epreuve where annee = ? and type_epreuve = ? and id_tournoi = ?";
-			PreparedStatement pstmt = connexion.prepareStatement(sqlIdEpreuve);
-			pstmt.setInt(1, nouveauMatch.getAnnee());
-			pstmt.setString(2, nouveauMatch.getTypeEpreuve());
-			pstmt.setInt(3, nouveauMatch.getTournoi().getIdTournoi());
-			ResultSet rs = pstmt.executeQuery();
-			if (rs.next()) {
-				idNouvelleEpreuve = rs.getInt("epreuve.id");
+			PreparedStatement idEpreuve = connexion.prepareStatement("select epreuve.id from epreuve where annee = ? and type_epreuve = ? and id_tournoi = ?");
+			idEpreuve.setInt(1, nouveauMatch.getAnnee());
+			idEpreuve.setString(2, nouveauMatch.getTypeEpreuve());
+			idEpreuve.setInt(3, nouveauMatch.getTournoi().getIdTournoi());
+			ResultSet rsE = idEpreuve.executeQuery();
+			if (rsE.next()) {
+				idNouvelleEpreuve = rsE.getInt("epreuve.id");
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 		
 		//création nouveau match avec id_epreuve, id_vainqueur, id_finaliste
-		try {
-			connexion = daoFactory.getConnection();
 			String sqlTableMatchTennis = "insert into match_tennis (ID_EPREUVE, ID_VAINQUEUR, ID_FINALISTE) values (?,?,?)";
-			PreparedStatement pstmt = connexion.prepareStatement(sqlTableMatchTennis);
-			pstmt.setInt(1, idNouvelleEpreuve);
-			pstmt.setLong(2, nouveauMatch.getVainqueur().getId());
-			pstmt.setLong(3, nouveauMatch.getFinaliste().getId());
-			pstmt.executeUpdate();
+			PreparedStatement modifTableMatch = connexion.prepareStatement(sqlTableMatchTennis);
+			modifTableMatch.setInt(1, idNouvelleEpreuve);
+			modifTableMatch.setLong(2, nouveauMatch.getVainqueur().getId());
+			modifTableMatch.setLong(3, nouveauMatch.getFinaliste().getId());
+			modifTableMatch.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 	}
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//Modifier les informations d'un match par son id
 	@Override
 	public void updateMatch(Long id, Tournoi tournoi, int annee, String typeEpreuve, Joueur vainqueur, Joueur finaliste) {
 		Long IdEpreuve = null;
@@ -207,54 +181,143 @@ public class MatchDaoImpl implements MatchDao{
 			//récupération id de l'épreuve
 			connexion = daoFactory.getConnection();
 			String sqlIdEpreuve = "select match_tennis.ID_EPREUVE from match_tennis where ID = ?";
-			PreparedStatement pstmt1 = connexion.prepareStatement(sqlIdEpreuve);
-			pstmt1.setLong(1, id);
-			ResultSet rs = pstmt1.executeQuery();
+			PreparedStatement recupIdEpreuve = connexion.prepareStatement(sqlIdEpreuve);
+			recupIdEpreuve.setLong(1, id);
+			ResultSet rs = recupIdEpreuve.executeQuery();
+			if (rs.next()) {
+				IdEpreuve = rs.getLong("match_tennis.ID_EPREUVE");
+			}
+		
+			//update de la table epreuve
+			String sqlUpdateEpreuve = "UPDATE epreuve set annee = ?, type_epreuve = ?, id_tournoi = ? where id = ? ";
+			PreparedStatement modifTableEpreuve = connexion.prepareStatement(sqlUpdateEpreuve);
+			modifTableEpreuve.setInt(1, annee);
+			modifTableEpreuve.setString(2, typeEpreuve);
+			modifTableEpreuve.setLong(3, tournoi.getIdTournoi());
+			modifTableEpreuve.setLong(4, IdEpreuve);
+			modifTableEpreuve.executeUpdate();
+
+			//update de la table match_tennis
+			String sqlUpdateMatchTennis = "UPDATE match_tennis set id_epreuve = ?, id_vainqueur = ?, id_finaliste = ? where id= ?";
+			PreparedStatement modifTableMatchTennis  = connexion.prepareStatement(sqlUpdateMatchTennis);
+			modifTableMatchTennis.setLong(1, IdEpreuve);
+			modifTableMatchTennis.setLong(2, vainqueur.getId());
+			modifTableMatchTennis.setLong(3, finaliste.getId());
+			modifTableMatchTennis.setLong(4, id);
+			modifTableMatchTennis.executeUpdate();
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//Supprimer les informations d'un match
+	@Override
+	public void deleteMatch(Long id) {
+		Long IdEpreuve = null;
+		
+		try {
+			//récupérer id de l'épreuve
+			connexion = daoFactory.getConnection();
+			String sqlIdEpreuve = "select match_tennis.ID_EPREUVE from match_tennis where ID = ?";
+			PreparedStatement recupIdEpreuve = connexion.prepareStatement(sqlIdEpreuve);
+			recupIdEpreuve.setLong(1, id);
+			ResultSet rs = recupIdEpreuve.executeQuery();
 			if (rs.next()) {
 				IdEpreuve = rs.getLong("match_tennis.ID_EPREUVE");
 			}
 			
-		}catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		try {
-			//update de la table epreuve
-			connexion = daoFactory.getConnection();
-			String sqlUpdateEpreuve = "UPDATE epreuve set annee = ?, type_epreuve = ?, id_tournoi = ? where id = ? ";
-			PreparedStatement pstmt2 = connexion.prepareStatement(sqlUpdateEpreuve);
-			pstmt2.setInt(1, annee);
-			pstmt2.setString(2, typeEpreuve);
-			pstmt2.setLong(3, tournoi.getIdTournoi());
-			pstmt2.setLong(4, IdEpreuve);
-			pstmt2.executeUpdate();
+			//supprimer le match
+			PreparedStatement deleteInfoMatch = connexion.prepareStatement("delete from match_tennis where id = ?");
+			deleteInfoMatch.setLong(1, id);
+			deleteInfoMatch.executeUpdate();
 			
-		}catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		try {
-			//update de la table match_tennis
-			connexion = daoFactory.getConnection();
-			String sqlUpdateMatchTennis = "UPDATE match_tennis set id_epreuve = ?, id_vainqueur = ?, id_finaliste = ? where id= ?";
-			PreparedStatement pstmt3  = connexion.prepareStatement(sqlUpdateMatchTennis);
-			pstmt3.setLong(1, IdEpreuve);
-			pstmt3.setLong(2, vainqueur.getId());
-			pstmt3.setLong(3, finaliste.getId());
-			pstmt3.setLong(4, id);
-			pstmt3.executeUpdate();
+			//supprimer l'epreuve
+			PreparedStatement deleteInfoEpreuve = connexion.prepareStatement("delete from epreuve where id= ?");
+			deleteInfoEpreuve.setLong(1, IdEpreuve);
+			deleteInfoEpreuve.executeUpdate();
 			
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 	}
-		
-	@Override
-	public void deleteMatch(Long id) {
-		// TODO Auto-generated method stub
-		
-	}
-	
 
+	//A implémenter
+	@Override
+	public List<Match> rechercher(String txt) {
+		ArrayList<Match> listeMatchRechercher = new ArrayList<Match>();
+//		try {
+//			connexion = daoFactory.getConnection();
+//			String sql = "select match_tennis.ID, epreuve.TYPE_EPREUVE, epreuve.ANNEE, tournoi.ID, tournoi.NOM, tournoi.code, match_tennis.ID_VAINQUEUR, match_tennis.ID_FINALISTE, joueur.ID, joueur.NOM, joueur.PRENOM "
+//					+ "from match_tennis inner join joueur inner join epreuve inner join tournoi "
+//					+ "where match_tennis.ID_EPREUVE = epreuve.ID and epreuve.ID_TOURNOI = tournoi.ID and match_tennis.ID_VAINQUEUR = joueur.ID and "
+//					+ "(tournoi.nom like '%' ? '%' or tournoi.code like '%' ? '%' or joueur.nom like '%' ? '%' or joueur.prenom like '%' ? '%')";
+//			PreparedStatement pstmt = connexion.prepareStatement(sql);
+//			pstmt.setString(1, txt);
+//			pstmt.setString(2, txt);
+//			pstmt.setString(3, txt);
+//			pstmt.setString(4, txt);
+//			ResultSet rs = pstmt.executeQuery();
+//			while (rs.next()) {
+//				Match m = new Match();
+//				Joueur v = new Joueur();
+//				Joueur f = new Joueur();
+//				Tournoi t = new Tournoi();
+//				//récupération infos match
+//				m.setIdMatch(rs.getLong("match_tennis.id"));
+//				m.setTypeEpreuve(rs.getString("epreuve.type_epreuve"));
+//				m.setAnnee(rs.getInt("epreuve.annee"));
+//				
+//				//récupération infos tournoi
+//				t.setIdTournoi(rs.getInt("tournoi.id"));
+//				t.setNomTournoi(rs.getString("tournoi.nom"));
+//				t.setCodeTournoi(rs.getString("tournoi.code"));
+//				
+//				//récupération infos vainqueur
+//				v.setId(rs.getLong("match_tennis.id_vainqueur"));
+//				v.setNom(rs.getString("joueur.nom"));
+//				v.setPrenom(rs.getString("joueur.prenom"));
+//				
+//				//récupération id finaliste
+//				f.setId(rs.getLong("match_tennis.id_finaliste"));
+//				
+//				//ajout infos tournoi, vainqueur et id finaliste au match
+//				m.setTournoi(t);
+//				m.setVainqueur(v);
+//				m.setFinaliste(f);
+//				
+//				//ajout du match à la liste
+//				listeMatchRechercher.add(m);
+//				}
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+//		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//		//recherche et ajout des infos du finaliste du match à partir de l'id
+//		for (Match match : listeMatchRechercher) {
+//			Long idFinaliste = match.getFinaliste().getId();
+//			try {
+//				connexion = daoFactory.getConnection();
+//				String sql = "select * from joueur where ID = " + idFinaliste;
+//				statement = connexion.prepareStatement(sql);
+//				ResultSet rs = statement.executeQuery();
+//				if (rs.next()) {
+//					match.getFinaliste().setNom(rs.getString("joueur.nom"));
+//					match.getFinaliste().setPrenom(rs.getString("joueur.prenom"));
+//					match.getFinaliste().setSexe(rs.getString("joueur.sexe"));
+//				}
+//				
+//			}catch (Exception e) {
+//				e.printStackTrace();			
+//		}
+//			
+		return listeMatchRechercher;
+	
+	}
 }

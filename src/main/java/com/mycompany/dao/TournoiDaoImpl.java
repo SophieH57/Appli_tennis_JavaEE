@@ -19,6 +19,7 @@ public class TournoiDaoImpl implements TournoiDao{
 		this.daoFactory = daoFactory;
 	}
 
+	//Récupération liste de tous les tournois
 	@Override
 	public List <Tournoi> lister() {
 		ArrayList<Tournoi> listeTournois= new ArrayList<Tournoi>();
@@ -40,6 +41,8 @@ public class TournoiDaoImpl implements TournoiDao{
 		return listeTournois;
 	}
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//Récupération des infos d'un tournoi par son id
 	@Override
 	public Tournoi lecture(Long id) {
 		Tournoi tournoiModif = new Tournoi();
@@ -59,6 +62,8 @@ public class TournoiDaoImpl implements TournoiDao{
 		return tournoiModif;
 	}
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//Ajouter un nouveau tournoi
 	@Override
 	public void ajouterTournoi(Tournoi nouveauTournoi) {
 		try {
@@ -73,6 +78,9 @@ public class TournoiDaoImpl implements TournoiDao{
 		
 	}
 
+	
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//Modifier infos d'un tournoi
 	@Override
 	public void updateTournoi(Long id, String nomT, String codeT) {
 		try {
@@ -89,6 +97,9 @@ public class TournoiDaoImpl implements TournoiDao{
 		
 	}
 
+	
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//Supprimer un tournoi
 	@Override
 	public void deleteTournoi(Long id) {
 		try {
@@ -100,6 +111,32 @@ public class TournoiDaoImpl implements TournoiDao{
 		catch(Exception e) {
 			System.out.println(e);
 		}
+	}
+
+	
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//Liste des tournois par recherche de texte dans le nom ou le code du tournoi
+	@Override
+	public List<Tournoi> rechercher(String txt) {
+		ArrayList<Tournoi> listeRechercheTournois= new ArrayList<Tournoi>();
+		try {
+			connexion = daoFactory.getConnection();
+			PreparedStatement pstmt = connexion.prepareStatement("select * from tournoi where nom like '%' ? '%' or code like '%' ? '%'");
+			pstmt.setString(1, txt);
+			pstmt.setString(2, txt);
+			ResultSet rs = pstmt.executeQuery();
+			while (rs.next()) {
+				Tournoi t = new Tournoi();
+				t.setIdTournoi(rs.getInt("tournoi.id"));
+				t.setNomTournoi(rs.getString("tournoi.nom"));
+				t.setCodeTournoi(rs.getString("tournoi.code"));
+				listeRechercheTournois.add(t);
+				}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return listeRechercheTournois;
 	}
 
 }

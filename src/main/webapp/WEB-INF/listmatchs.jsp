@@ -20,6 +20,7 @@
     <h1>Liste des matchs</h1>
     <p class="lead">Bienvenue .... Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolor.</p>
   </div>
+  
 
 </main><!-- /.container -->
 <div class="container">
@@ -28,40 +29,38 @@
 <a class="btn btn-primary" href="/Appli_tennis/AjouterMatch" role="button">Ajouter un match</a>
 </div>
 
-<table class="table">
-  <thead>
-    <tr>
-      <th scope="col" style="width:5%">ID du Match</th>
-      <th scope="col" style="width:15%">Tournoi</th>
-      <th scope="col" style="width:5%">Année</th>
-	  <th scope="col" style="width:15%">Type de l'épreuve</th>
-	  <th scope="col" style="width:15%">Nom du vainqueur</th>
-	  <th scope="col" style="width:15%">Prénom du vainqueur</th>
-  	  <th scope="col" style="width:15%">Nom du finaliste</th>
-	  <th scope="col" style="width:15%">Prénom du finaliste</th>
-    </tr>
-  </thead>
-  <tbody>
-   
-    <c:forEach var="match" items="${listeMatchs}">
-    <tr>
-      <th ><c:out value="${match.idMatch}"></c:out></th>
-      <td ><c:out value="${match.tournoi.nomTournoi}"></c:out></td>
-      <td ><c:out value="${match.annee}"></c:out></td>
-      <td ><c:out value="${match.typeEpreuve}"></c:out></td>
-      <td ><c:out value="${match.vainqueur.nom}"></c:out></td>
-      <td ><c:out value="${match.vainqueur.prenom}"></c:out></td>
-      <td ><c:out value="${match.finaliste.nom}"></c:out></td>
-      <td ><c:out value="${match.finaliste.prenom}"></c:out></td>
-	  <td>
-	    <a type="submit" class="btn btn-outline-primary" href="/Appli_tennis/ModifierMatch?id=${match.idMatch}" role="button">Modifier</a>
-		<a type="submit" class="btn btn-outline-primary" href="/Appli_tennis/SupprimerMatch?id=${match.idMatch}" role="button">Supprimer</a>
-	  </td>
-    </tr>
-    </c:forEach>
+<p> <c:if test="${listeMatchs[0] == null}"><strong>Aucun match ne correspond à votre recherche</strong></c:if></p>
 
-  </tbody>
-</table>
+<c:if test="${listeMatchs[0] != null}">
+	<table class="table">
+	  <thead>
+	    <tr>
+	      <th scope="col" style="width:15%">Tournoi</th>
+	      <th scope="col" style="width:5%">Année</th>
+		  <th scope="col" style="width:15%">Type de l'épreuve</th>
+		  <th scope="col" style="width:15%">Vainqueur</th>
+	  	  <th scope="col" style="width:15%">Finaliste</th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	   
+	    <c:forEach var="match" items="${listeMatchs}">
+	    <tr>
+	      <td ><c:out value="${match.tournoi.nomTournoi}"></c:out></td>
+	      <td ><c:out value="${match.annee}"></c:out></td>
+	      <td ><c:out value="${match.typeEpreuve}"></c:out></td>
+	      <td ><c:out value="${match.vainqueur.nom} ${match.vainqueur.prenom}"></c:out></td>
+	      <td ><c:out value="${match.finaliste.nom} ${match.finaliste.prenom}"></c:out></td>
+		  <td>
+		    <a type="submit" class="btn btn-outline-primary" href="/Appli_tennis/ModifierMatch?id=${match.idMatch}" role="button">Modifier</a>
+			<a type="submit" class="btn btn-outline-primary" href="/Appli_tennis/SupprimerMatch?id=${match.idMatch}" role="button">Supprimer</a>
+		  </td>
+	    </tr>
+	    </c:forEach>
+	
+	  </tbody>
+	</table>
+</c:if>
 </div>
 
     <!-- Optional JavaScript -->

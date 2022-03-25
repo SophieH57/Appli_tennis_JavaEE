@@ -23,7 +23,7 @@
    <div style="width:40%; margin:auto;"> 
 
 <form class="needs-validation "  novalidate method="post" action="ModifierMatch">
-	<input type="number" class="form-control" style="width:400px;" id="idMatch" name="idMatch" value="${match.idMatch}" required>
+	<input type="hidden" class="form-control" style="width:400px;" id="idMatch" name="idMatch" value="${match.idMatch}" required>
    <div class="form-row">
     <div class="col-md-3 mb-3">
       <label for="tournoi">Tournoi</label>

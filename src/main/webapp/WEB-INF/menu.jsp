@@ -25,15 +25,16 @@
       </li>
 	
        <li class="nav-item">
-	    <form class="form-inline my-2 my-lg-0" action="ListJoueur" method="post">      
+	    <form class="form-inline my-2 my-lg-0" method="post" action="ListJoueur">      
          <button class="btn btn-secondary my-2 my-sm-0" type="submit" name="action1" value="Deconnexion">Deconnexion</button>
          </form>
       </li>
      
     </ul>
-    <form class="form-inline my-2 my-lg-0" action="ListJoueur" method="post">
+    <form class="form-inline my-2 my-lg-0" action="Rechercher" method="post">
+      <input type="hidden" name="page" value="${page}"/>
       <input class="form-control mr-sm-2" type="text" name="txtsearch" placeholder="Search" aria-label="Search">
-      <button class="btn btn-secondary my-2 my-sm-0" type="submit" name="action1" value="Rechercher">Rechercher</button>
+      <button class="btn btn-secondary my-2 my-sm-0" type="submit" >Rechercher</button>
     </form>
   </div>
 </nav>

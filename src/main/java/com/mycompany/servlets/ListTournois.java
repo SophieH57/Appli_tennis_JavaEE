@@ -17,6 +17,7 @@ import com.mycompany.dao.TournoiDaoImpl;
 public class ListTournois extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	TournoiDaoImpl tdi;
+	String typePage = "pageTournoi";
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -39,6 +40,7 @@ public class ListTournois extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setAttribute("listeTournois",tdi.lister());
+		request.getSession().setAttribute("page", typePage);
 		this.getServletContext().getRequestDispatcher("/WEB-INF/listtournois.jsp").forward(request, response);
 	}
 
