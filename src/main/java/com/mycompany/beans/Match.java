@@ -1,6 +1,6 @@
 package com.mycompany.beans;
 
-public class Match {
+public class Match{
 	private Long idMatch;
 	private String typeEpreuve;
 	private int annee;
@@ -70,6 +70,7 @@ public class Match {
 	public void setFinaliste(Joueur finaliste) {
 		this.finaliste = finaliste;
 	}
+
 
 	
 

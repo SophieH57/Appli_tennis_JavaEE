@@ -32,9 +32,13 @@ public class ModifierTournoi extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Long idTournoiModif = Long.parseLong(request.getParameter("id"));
-		request.setAttribute("tournoi", tdi.lecture(idTournoiModif));
-		this.getServletContext().getRequestDispatcher("/WEB-INF/modifiertournoi.jsp").forward(request, response);
+		if (request.getSession().getAttribute("utilisateur") != null) {
+			Long idTournoiModif = Long.parseLong(request.getParameter("id"));
+			request.setAttribute("tournoi", tdi.lecture(idTournoiModif));
+			this.getServletContext().getRequestDispatcher("/WEB-INF/modifiertournoi.jsp").forward(request, response);
+		} else {
+			response.sendRedirect("/Appli_tennis/login");
+		}
 	}
 
 	/**

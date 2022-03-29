@@ -49,11 +49,15 @@ public class ModifierMatch extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Long idMatch = Long.parseLong(request.getParameter("id"));
-		request.setAttribute("match", mdi.lecture(idMatch));
-		request.setAttribute("listeTournois", tdi.lister());
-		request.setAttribute("listeJoueurs", jdi.lister());
-		this.getServletContext().getRequestDispatcher("/WEB-INF/modifiermatch.jsp").forward(request, response);
+		if (request.getSession().getAttribute("utilisateur") != null) {
+			Long idMatch = Long.parseLong(request.getParameter("id"));
+			request.setAttribute("match", mdi.lecture(idMatch));
+			request.setAttribute("listeTournois", tdi.lister());
+			request.setAttribute("listeJoueurs", jdi.lister());
+			this.getServletContext().getRequestDispatcher("/WEB-INF/modifiermatch.jsp").forward(request, response);
+		} else {
+			response.sendRedirect("/Appli_tennis/login");
+		}
 	}
 
 	/**

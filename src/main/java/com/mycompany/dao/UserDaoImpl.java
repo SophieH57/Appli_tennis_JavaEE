@@ -43,5 +43,9 @@ public class UserDaoImpl {
 		}
 		return utilisateur;
 }
+	
+	public User logOut() {
+		return null;
+	}
 }
 

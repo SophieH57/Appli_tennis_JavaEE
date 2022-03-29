@@ -38,9 +38,14 @@ public class ModifierJoueur extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		if (request.getSession().getAttribute("utilisateur") != null) {
 		Long idJoueurAModifier = Long.parseLong(request.getParameter("id"));
 		request.setAttribute("joueur", jdi.lecture(idJoueurAModifier));
 		this.getServletContext().getRequestDispatcher("/WEB-INF/modifierjoueur.jsp").forward(request, response);
+	}
+	else {
+		response.sendRedirect("/Appli_tennis/login");
+	}
 	}
 
 	/**

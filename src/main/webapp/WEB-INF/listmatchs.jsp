@@ -35,6 +35,7 @@
 	<table class="table">
 	  <thead>
 	    <tr>
+	      <th scope="col" style="width:15%">Id Match</th>
 	      <th scope="col" style="width:15%">Tournoi</th>
 	      <th scope="col" style="width:5%">Année</th>
 		  <th scope="col" style="width:15%">Type de l'épreuve</th>
@@ -46,6 +47,7 @@
 	   
 	    <c:forEach var="match" items="${listeMatchs}">
 	    <tr>
+	      <td ><c:out value="${match.idMatch}"></c:out></td>
 	      <td ><c:out value="${match.tournoi.nomTournoi}"></c:out></td>
 	      <td ><c:out value="${match.annee}"></c:out></td>
 	      <td ><c:out value="${match.typeEpreuve}"></c:out></td>

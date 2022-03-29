@@ -34,6 +34,8 @@ public class TournoiDaoImpl implements TournoiDao{
 				t.setCodeTournoi(rs.getString("tournoi.code"));
 				listeTournois.add(t);
 				}
+			
+			connexion.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -56,6 +58,8 @@ public class TournoiDaoImpl implements TournoiDao{
 				tournoiModif.setNomTournoi(rs.getString("tournoi.nom"));
 				tournoiModif.setCodeTournoi(rs.getString("tournoi.code"));
 			}
+			
+			connexion.close();
 		}
 		catch (Exception e){	
 		}
@@ -72,6 +76,8 @@ public class TournoiDaoImpl implements TournoiDao{
 	        pstmt.setString(1, nouveauTournoi.getNomTournoi());
 	        pstmt.setString(2, nouveauTournoi.getCodeTournoi());
 	        pstmt.executeUpdate();
+	        
+	        connexion.close();
 	    } catch (Exception e) {
 	            System.out.println(e);
 	        }
@@ -90,6 +96,8 @@ public class TournoiDaoImpl implements TournoiDao{
 			pstmt.setString(2, codeT);
 			pstmt.setLong(3, id);
 			pstmt.executeUpdate();
+			
+			connexion.close();
 		}
 		catch (Exception e){
 			System.err.println(e);
@@ -107,6 +115,8 @@ public class TournoiDaoImpl implements TournoiDao{
 			PreparedStatement pstmt = connexion.prepareStatement("DELETE from tournoi where ID = ?");
 			pstmt.setLong(1, id);
 			pstmt.executeUpdate();
+			
+			connexion.close();
 		}
 		catch(Exception e) {
 			System.out.println(e);
@@ -132,6 +142,8 @@ public class TournoiDaoImpl implements TournoiDao{
 				t.setCodeTournoi(rs.getString("tournoi.code"));
 				listeRechercheTournois.add(t);
 				}
+			
+			connexion.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

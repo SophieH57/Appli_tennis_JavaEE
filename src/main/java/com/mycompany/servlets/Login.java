@@ -10,15 +10,17 @@ import javax.servlet.http.HttpSession;
 
 import com.mycompany.beans.User;
 import com.mycompany.dao.DaoFactory;
+import com.mycompany.dao.HashClass;
 import com.mycompany.dao.UserDaoImpl;
 
 /**
  * Servlet implementation class Login
  */
 @WebServlet("/login")
-public class Login extends HttpServlet {
+public class Login extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 	UserDaoImpl userDaoImpl;
+	HashClass hc;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -34,6 +36,7 @@ public class Login extends HttpServlet {
     	super.init();
     	DaoFactory daoF = DaoFactory.getInstance(); //création instance DaoFactory
     	userDaoImpl = new UserDaoImpl(daoF);
+    	hc = new HashClass();
     }
 
 	/**
@@ -49,7 +52,8 @@ public class Login extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String login = request.getParameter("txtLogin");
 		String password = request.getParameter("txtPassword");
-		User connectedUser = userDaoImpl.isValidLogin(login, password);
+		String hashMdp = HashClass.sha1(password);
+		User connectedUser = userDaoImpl.isValidLogin(login, hashMdp);
 		HttpSession session = request.getSession();
 		String typePage = "pageJoueur";
 		if (connectedUser != null){
@@ -57,7 +61,7 @@ public class Login extends HttpServlet {
 			session.setAttribute("page", typePage);
 			response.sendRedirect("/Appli_tennis/ListJoueur");
 		}
-		else this.getServletContext().getRequestDispatcher("/WEB-INF/login.jsp").forward(request, response);
+		else response.sendRedirect("/Appli_tennis/login");
 	}
 
 }

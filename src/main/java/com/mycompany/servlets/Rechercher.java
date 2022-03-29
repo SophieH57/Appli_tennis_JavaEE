@@ -46,21 +46,25 @@ public class Rechercher extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String typePage = (String) request.getSession().getAttribute("page");
-		
-		switch (typePage) {
-		case "pageJoueur" : 
-			request.setAttribute("liste", jdi.rechercher(request.getParameter("txtsearch")));
-			this.getServletContext().getRequestDispatcher("/WEB-INF/listjoueur.jsp").forward(request, response);
-			break;
-		case "pageMatch" :
-			request.setAttribute("listeMatchs", mdi.rechercher(request.getParameter("txtsearch")));
-			this.getServletContext().getRequestDispatcher("/WEB-INF/listmatchs.jsp").forward(request, response);
-			break;
-		case "pageTournoi":
-			request.setAttribute("listeTournois", tdi.rechercher(request.getParameter("txtsearch")));
-			this.getServletContext().getRequestDispatcher("/WEB-INF/listtournois.jsp").forward(request, response);
-			break;
+		if (request.getSession().getAttribute("utilisateur") != null) {
+			String typePage = (String) request.getSession().getAttribute("page");
+			
+			switch (typePage) {
+			case "pageJoueur" : 
+				request.setAttribute("liste", jdi.rechercher(request.getParameter("txtsearch")));
+				this.getServletContext().getRequestDispatcher("/WEB-INF/listjoueur.jsp").forward(request, response);
+				break;
+			case "pageMatch" :
+				request.setAttribute("listeMatchs", mdi.rechercher(request.getParameter("txtsearch")));
+				this.getServletContext().getRequestDispatcher("/WEB-INF/listmatchs.jsp").forward(request, response);
+				break;
+			case "pageTournoi":
+				request.setAttribute("listeTournois", tdi.rechercher(request.getParameter("txtsearch")));
+				this.getServletContext().getRequestDispatcher("/WEB-INF/listtournois.jsp").forward(request, response);
+				break;
+			}
+		} else {
+			response.sendRedirect("/Appli_tennis/login");
 		}
 		
 	}

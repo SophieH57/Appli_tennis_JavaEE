@@ -40,9 +40,13 @@ public class ListJoueur extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		if (request.getSession().getAttribute("utilisateur") != null) {
 		request.setAttribute("liste", jdi.lister());
 		request.getSession().setAttribute("page", typePage);
 		this.getServletContext().getRequestDispatcher("/WEB-INF/listjoueur.jsp").forward(request, response);
+	} else {
+		response.sendRedirect("/Appli_tennis/login");
+	}
 	}
 
 	/**

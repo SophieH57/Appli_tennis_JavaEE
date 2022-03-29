@@ -39,9 +39,13 @@ public class ListTournois extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.setAttribute("listeTournois",tdi.lister());
-		request.getSession().setAttribute("page", typePage);
-		this.getServletContext().getRequestDispatcher("/WEB-INF/listtournois.jsp").forward(request, response);
+		if (request.getSession().getAttribute("utilisateur") != null) {
+			request.setAttribute("listeTournois",tdi.lister());
+			request.getSession().setAttribute("page", typePage);
+			this.getServletContext().getRequestDispatcher("/WEB-INF/listtournois.jsp").forward(request, response);
+		} else {
+			response.sendRedirect("/Appli_tennis/login");
+		}
 	}
 
 	/**

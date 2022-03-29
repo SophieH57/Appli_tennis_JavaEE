@@ -7,53 +7,35 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.mycompany.dao.DaoFactory;
-import com.mycompany.dao.MatchDaoImpl;
-
 /**
- * Servlet implementation class ListMatchs
+ * Servlet implementation class Deconnexion
  */
-@WebServlet("/ListMatchs")
-public class ListMatchs extends HttpServlet {
+@WebServlet("/Deconnexion")
+public class Deconnexion extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	MatchDaoImpl mdi;
-	String typePage = "pageMatch";
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ListMatchs() {
+    public Deconnexion() {
         super();
         // TODO Auto-generated constructor stub
-    }
-    
-    @Override
-    public void init() throws ServletException {
-    	// TODO Auto-generated method stub
-    	super.init();
-    	DaoFactory daoF = DaoFactory.getInstance();
-    	mdi = new MatchDaoImpl(daoF);
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		if (request.getSession().getAttribute("utilisateur") != null) {
-			request.setAttribute("listeMatchs", mdi.lister());
-			request.getSession().setAttribute("page", typePage);
-			this.getServletContext().getRequestDispatcher("/WEB-INF/listmatchs.jsp").forward(request, response);
-		} else {
-			response.sendRedirect("/Appli_tennis/login");
-		}
+		// TODO Auto-generated method stub
+		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
+		request.getSession().removeAttribute("utilisateur");
+		response.sendRedirect("/Appli_tennis/login");
 	}
 
 }

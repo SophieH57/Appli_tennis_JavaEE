@@ -25,14 +25,16 @@
       </li>
 	
        <li class="nav-item">
-	    <form class="form-inline my-2 my-lg-0" method="post" action="ListJoueur">      
-         <button class="btn btn-secondary my-2 my-sm-0" type="submit" name="action1" value="Deconnexion">Deconnexion</button>
+	    <form class="form-inline my-2 my-lg-0" method="post" action="Deconnexion">
+	    <input type="hidden" name="utilisateur" value="${utilisateur}"/>
+         <button class="btn btn-secondary my-2 my-sm-0" type="submit" name="deconnexion" value="Deconnexion">Deconnexion</button>
          </form>
       </li>
      
     </ul>
     <form class="form-inline my-2 my-lg-0" action="Rechercher" method="post">
       <input type="hidden" name="page" value="${page}"/>
+      <h1 class="h3 mb-3 font-weight-normal mr-5" style="color:#FFF"> Bonjour ${utilisateur.login }</h1>
       <input class="form-control mr-sm-2" type="text" name="txtsearch" placeholder="Search" aria-label="Search">
       <button class="btn btn-secondary my-2 my-sm-0" type="submit" >Rechercher</button>
     </form>

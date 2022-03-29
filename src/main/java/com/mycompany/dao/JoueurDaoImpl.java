@@ -36,6 +36,7 @@ public class JoueurDaoImpl implements JoueurDao {
 				j.setSexe(rs.getString("joueur.sexe"));
 				listeJoueurPerso.add(j);
 				}
+			connexion.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -53,7 +54,8 @@ public class JoueurDaoImpl implements JoueurDao {
 	        pstmt.setString(2, nouveauJoueur.getPrenom());
 	        pstmt.setString(3, nouveauJoueur.getSexe());
 	        pstmt.executeUpdate();
-	        System.out.println("Joueur "+ nouveauJoueur.getNom() +" "+ nouveauJoueur.getPrenom() + " ajouté à la base de donnée");
+	        
+	        connexion.close();
 	    } catch (Exception e) {
 	            System.out.println(e);
 	        }
@@ -74,6 +76,7 @@ public class JoueurDaoImpl implements JoueurDao {
 				joueurAModif.setPrenom(rs.getString("joueur.prenom"));
 				joueurAModif.setSexe(rs.getString("joueur.sexe"));
 			}
+			connexion.close();
 		}
 		catch (Exception e){	
 		}
@@ -91,6 +94,8 @@ public class JoueurDaoImpl implements JoueurDao {
 			pstmt.setString(3, sexe);
 			pstmt.setLong(4, id);
 			pstmt.executeUpdate();
+			
+			connexion.close();
 		}
 		catch (Exception e){
 			System.err.println(e);
@@ -162,6 +167,8 @@ public class JoueurDaoImpl implements JoueurDao {
 			PreparedStatement pstmt5 = connexion.prepareStatement("DELETE from joueur where ID = ?");
 			pstmt5.setLong(1, id);
 			pstmt5.executeUpdate();
+			
+			connexion.close();
 		}
 		catch(Exception e) {
 			System.out.println(e);
@@ -187,6 +194,7 @@ public class JoueurDaoImpl implements JoueurDao {
 				j.setSexe(rs.getString("joueur.sexe"));
 				listeJoueurRecherche.add(j);
 				}
+			connexion.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

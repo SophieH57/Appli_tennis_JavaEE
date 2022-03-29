@@ -13,73 +13,49 @@ import com.mycompany.beans.Tournoi;
 
 public class MatchDaoImpl implements MatchDao{
 	private DaoFactory daoFactory;
+
 	private Connection connexion = null;
-	private PreparedStatement statement = null;
-	JoueurDaoImpl jdi = new JoueurDaoImpl(daoFactory);
-	
+	JoueurDaoImpl jdi;
+	TournoiDaoImpl tdi;
+
 	public MatchDaoImpl(DaoFactory daoFactory) {
 		super();
 		this.daoFactory = daoFactory;
+		jdi = new JoueurDaoImpl(daoFactory);
+		tdi = new TournoiDaoImpl(daoFactory);
 	}
 	
 	//Récupérer la liste de tous les matchs
 	@Override
 	public List<Match> lister() {
 		ArrayList<Match> listeMatchs= new ArrayList<Match>();
+		Long nombreMatchs = 0l;
+		
 		try {
 			connexion = daoFactory.getConnection();
-			String sql1 = "select match_tennis.ID, epreuve.TYPE_EPREUVE, epreuve.ANNEE, tournoi.ID, tournoi.NOM, tournoi.code, match_tennis.ID_VAINQUEUR, match_tennis.ID_FINALISTE, joueur.ID, joueur.NOM, joueur.PRENOM "
-					+ "from match_tennis inner join joueur inner join epreuve inner join tournoi "
-					+ "where match_tennis.ID_EPREUVE = epreuve.ID and epreuve.ID_TOURNOI = tournoi.ID and match_tennis.ID_VAINQUEUR = joueur.ID";
-			PreparedStatement matchTournoiVainqueur = connexion.prepareStatement(sql1);
-			ResultSet rs = matchTournoiVainqueur.executeQuery();
-			PreparedStatement matchFinaliste = connexion.prepareStatement("select * from joueur where ID = ?");
-			while (rs.next()) {
-				Match m = new Match();
-				Joueur v = new Joueur();
-				Joueur f = new Joueur();
-				Tournoi t = new Tournoi();
-				//récupération infos match
-				m.setIdMatch(rs.getLong("match_tennis.id"));
-				m.setTypeEpreuve(rs.getString("epreuve.type_epreuve"));
-				m.setAnnee(rs.getInt("epreuve.annee"));
+			
+			//récupération du nombre de match dans la base de données
+			String ReqNbMatch = "select count(id) from match_tennis";
+			PreparedStatement nbMatch = connexion.prepareStatement(ReqNbMatch);
+			ResultSet rsNbMatch = nbMatch.executeQuery();
+			if (rsNbMatch.next()) {
+				nombreMatchs = rsNbMatch.getLong(1);
+			}
+			
+			//Pour chaque match, récupération des infos du tournoi et des joueurs
+			for (Long i = 1l; i<=nombreMatchs; i++) {
+				listeMatchs.add(lecture(i));
 				
-				//récupération infos tournoi
-				t.setIdTournoi(rs.getInt("tournoi.id"));
-				t.setNomTournoi(rs.getString("tournoi.nom"));
-				t.setCodeTournoi(rs.getString("tournoi.code"));
-				
-				//récupération infos vainqueur
-				v.setId(rs.getLong("match_tennis.id_vainqueur"));
-				v.setNom(rs.getString("joueur.nom"));
-				v.setPrenom(rs.getString("joueur.prenom"));
-				
-				//récupération infos finaliste
-				f.setId(rs.getLong("match_tennis.id_finaliste"));
-				matchFinaliste.setLong(1, f.getId());
-				ResultSet rsF = matchFinaliste.executeQuery();
-				if (rsF.next()) {
-					f.setNom(rsF.getString("joueur.nom"));
-					f.setPrenom(rsF.getString("joueur.prenom"));
-					f.setSexe(rsF.getString("joueur.sexe"));
-				}
-				
-				//ajout infos tournoi, vainqueur et id finaliste au match
-				m.setTournoi(t);
-				m.setVainqueur(v);
-				m.setFinaliste(f);
-				
-				//ajout du match à la liste
-				listeMatchs.add(m);
-				}
+			}
+			connexion.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-					
+		}			
 		return listeMatchs;
 	}
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//Récupérer les information d'un match par son id
 	@Override
 	public Match lecture(Long id) {
@@ -126,7 +102,9 @@ public class MatchDaoImpl implements MatchDao{
 				m.setTournoi(t);
 				m.setVainqueur(v);
 				m.setFinaliste(f);
+				
 			}
+			connexion.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -166,6 +144,8 @@ public class MatchDaoImpl implements MatchDao{
 			modifTableMatch.setLong(2, nouveauMatch.getVainqueur().getId());
 			modifTableMatch.setLong(3, nouveauMatch.getFinaliste().getId());
 			modifTableMatch.executeUpdate();
+			
+			connexion.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -206,6 +186,7 @@ public class MatchDaoImpl implements MatchDao{
 			modifTableMatchTennis.setLong(4, id);
 			modifTableMatchTennis.executeUpdate();
 			
+			connexion.close();
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -240,84 +221,70 @@ public class MatchDaoImpl implements MatchDao{
 			deleteInfoEpreuve.setLong(1, IdEpreuve);
 			deleteInfoEpreuve.executeUpdate();
 			
+			connexion.close();
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
 		
 	}
 
-	//A implémenter
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//Rechercher les infos d'un match par présence d'une chaine de caractère dans le nom ou le prénom d'un joueur, le nom ou le code d'un tournoi ou dans l'année de l'épreuve
 	@Override
 	public List<Match> rechercher(String txt) {
 		ArrayList<Match> listeMatchRechercher = new ArrayList<Match>();
-//		try {
-//			connexion = daoFactory.getConnection();
-//			String sql = "select match_tennis.ID, epreuve.TYPE_EPREUVE, epreuve.ANNEE, tournoi.ID, tournoi.NOM, tournoi.code, match_tennis.ID_VAINQUEUR, match_tennis.ID_FINALISTE, joueur.ID, joueur.NOM, joueur.PRENOM "
-//					+ "from match_tennis inner join joueur inner join epreuve inner join tournoi "
-//					+ "where match_tennis.ID_EPREUVE = epreuve.ID and epreuve.ID_TOURNOI = tournoi.ID and match_tennis.ID_VAINQUEUR = joueur.ID and "
-//					+ "(tournoi.nom like '%' ? '%' or tournoi.code like '%' ? '%' or joueur.nom like '%' ? '%' or joueur.prenom like '%' ? '%')";
-//			PreparedStatement pstmt = connexion.prepareStatement(sql);
-//			pstmt.setString(1, txt);
-//			pstmt.setString(2, txt);
-//			pstmt.setString(3, txt);
-//			pstmt.setString(4, txt);
-//			ResultSet rs = pstmt.executeQuery();
-//			while (rs.next()) {
-//				Match m = new Match();
-//				Joueur v = new Joueur();
-//				Joueur f = new Joueur();
-//				Tournoi t = new Tournoi();
-//				//récupération infos match
-//				m.setIdMatch(rs.getLong("match_tennis.id"));
-//				m.setTypeEpreuve(rs.getString("epreuve.type_epreuve"));
-//				m.setAnnee(rs.getInt("epreuve.annee"));
-//				
-//				//récupération infos tournoi
-//				t.setIdTournoi(rs.getInt("tournoi.id"));
-//				t.setNomTournoi(rs.getString("tournoi.nom"));
-//				t.setCodeTournoi(rs.getString("tournoi.code"));
-//				
-//				//récupération infos vainqueur
-//				v.setId(rs.getLong("match_tennis.id_vainqueur"));
-//				v.setNom(rs.getString("joueur.nom"));
-//				v.setPrenom(rs.getString("joueur.prenom"));
-//				
-//				//récupération id finaliste
-//				f.setId(rs.getLong("match_tennis.id_finaliste"));
-//				
-//				//ajout infos tournoi, vainqueur et id finaliste au match
-//				m.setTournoi(t);
-//				m.setVainqueur(v);
-//				m.setFinaliste(f);
-//				
-//				//ajout du match à la liste
-//				listeMatchRechercher.add(m);
-//				}
-//		} catch (SQLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		
-//		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//		//recherche et ajout des infos du finaliste du match à partir de l'id
-//		for (Match match : listeMatchRechercher) {
-//			Long idFinaliste = match.getFinaliste().getId();
-//			try {
-//				connexion = daoFactory.getConnection();
-//				String sql = "select * from joueur where ID = " + idFinaliste;
-//				statement = connexion.prepareStatement(sql);
-//				ResultSet rs = statement.executeQuery();
-//				if (rs.next()) {
-//					match.getFinaliste().setNom(rs.getString("joueur.nom"));
-//					match.getFinaliste().setPrenom(rs.getString("joueur.prenom"));
-//					match.getFinaliste().setSexe(rs.getString("joueur.sexe"));
-//				}
-//				
-//			}catch (Exception e) {
-//				e.printStackTrace();			
-//		}
-//			
+		ArrayList<Long> listeIndexMatch = new ArrayList<Long>();
+		ArrayList<Tournoi> listeTournois;
+		ArrayList<Joueur> listeJoueurs;
+		
+		try {
+			connexion = daoFactory.getConnection();
+			//recherche des tournois correspondant à la recherche
+			listeTournois = (ArrayList<Tournoi>) tdi.rechercher(txt);
+			
+			for (Tournoi t : listeTournois) {
+				PreparedStatement MatchParTournoi = connexion.prepareStatement("select match_tennis.ID from match_tennis inner join epreuve inner join tournoi where tournoi.ID = epreuve.ID_TOURNOI and epreuve.ID = match_tennis.ID_EPREUVE and tournoi.ID = ? ");
+				MatchParTournoi.setLong(1, t.getIdTournoi());
+				ResultSet rsMT = MatchParTournoi.executeQuery();
+				while (rsMT.next()) {
+					Long idM = rsMT.getLong("match_tennis.ID");
+					listeIndexMatch.add(idM);
+				}
+			}
+			
+			//recherche des joueurs correspondant à la recherche
+			listeJoueurs = (ArrayList<Joueur>) jdi.rechercher(txt);
+			
+			for (Joueur j : listeJoueurs) {
+				PreparedStatement JoueurParTournoi = connexion.prepareStatement("select match_tennis.ID from match_tennis inner join joueur where (joueur.ID = match_tennis.ID_FINALISTE or joueur.ID = match_tennis.ID_VAINQUEUR) and joueur.id = ? ");
+				JoueurParTournoi.setLong(1, j.getId());
+				ResultSet rsJT = JoueurParTournoi.executeQuery();
+				while (rsJT.next()) {
+					Long idMj = rsJT.getLong("match_tennis.id");
+					if (!listeIndexMatch.contains(idMj)) listeIndexMatch.add(idMj);
+				}
+			}
+			
+			//recherche des années correspondant à la recherche
+			PreparedStatement rechercheParAnnee = connexion.prepareStatement("select match_tennis.ID from match_tennis inner join epreuve where match_tennis.ID_EPREUVE = epreuve.ID and epreuve.ANNEE like '%' ? '%'");
+			rechercheParAnnee.setString(1, txt);
+			ResultSet rsAnnee = rechercheParAnnee.executeQuery();
+			while (rsAnnee.next()) {
+				Long idMa = rsAnnee.getLong("match_tennis.ID");
+				if (!listeIndexMatch.contains(idMa)) listeIndexMatch.add(idMa);
+			}
+			
+			//recherche des matchs par leur id et ajout à la liste des matchs
+			for (Long id : listeIndexMatch) {
+				listeMatchRechercher.add(lecture(id));
+			}
+						
+			connexion.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+					
 		return listeMatchRechercher;
-	
 	}
 }

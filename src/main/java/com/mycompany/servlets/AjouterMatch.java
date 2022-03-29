@@ -49,9 +49,13 @@ public class AjouterMatch extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.setAttribute("listeTournois", tdi.lister());
-		request.setAttribute("listeJoueurs", jdi.lister());
-		this.getServletContext().getRequestDispatcher("/WEB-INF/ajoutermatch.jsp").forward(request, response);
+		if (request.getSession().getAttribute("utilisateur") != null) {
+			request.setAttribute("listeTournois", tdi.lister());
+			request.setAttribute("listeJoueurs", jdi.lister());
+			this.getServletContext().getRequestDispatcher("/WEB-INF/ajoutermatch.jsp").forward(request, response);
+		} else {
+			response.sendRedirect("/Appli_tennis/login");
+		}
 	}
 
 	/**
