@@ -18,7 +18,10 @@
 
   <div class="starter-template">
     <h1>Liste des tournois</h1>
-    <p class="lead">Bienvenue .... Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolor.</p>
+    <img class="mr-10" src="AO.png" style="width:200px; height:auto;"  alt="logo Australian Open">
+    <img class="mr-10" src="RG.png" style="width:200px; height:auto;"  alt="logo Roland Garros">
+    <img class="mr-10" src="wimbledon.jpg" style="width:200px; height:auto;"  alt="logo Wimbledon">
+    <img class="mr-10" src="us-open.jpg" style="width:200px; height:auto;"  alt="logo Wimbledon">
   </div>
 
 </main><!-- /.container -->

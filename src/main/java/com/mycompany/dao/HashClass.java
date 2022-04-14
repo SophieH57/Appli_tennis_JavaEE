@@ -22,9 +22,4 @@ public class HashClass{
 		return sha;
 	}
 	
-	public static void main(String[] args) {
-		System.out.println(sha1("bonjour"));
-		System.out.println(sha1("bonjour"));
-		System.out.println(sha1("hello"));
-	}
 }

@@ -18,7 +18,7 @@
 
   <div class="starter-template">
     <h1>Ajouter un joueur</h1>
-    <p class="lead"> ><c:if test="${ !empty erreur }"><p style="color:red;"><c:out value="${ erreur }" /></p></c:if>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+    <p class="lead"><c:if test="${ !empty erreur }"><p style="color:red;"><c:out value="${ erreur }" /></p></c:if></p>
   </div>
    <div style="width:40%; margin:auto;"> 
 

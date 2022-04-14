@@ -51,10 +51,12 @@ public class Rechercher extends HttpServlet {
 			
 			switch (typePage) {
 			case "pageJoueur" : 
+				request.setAttribute("choixSexe", "Tous");
 				request.setAttribute("liste", jdi.rechercher(request.getParameter("txtsearch")));
 				this.getServletContext().getRequestDispatcher("/WEB-INF/listjoueur.jsp").forward(request, response);
 				break;
 			case "pageMatch" :
+				request.setAttribute("choixTypeJoueur", "Tous");
 				request.setAttribute("listeMatchs", mdi.rechercher(request.getParameter("txtsearch")));
 				this.getServletContext().getRequestDispatcher("/WEB-INF/listmatchs.jsp").forward(request, response);
 				break;

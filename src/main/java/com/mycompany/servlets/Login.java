@@ -36,7 +36,6 @@ public class Login extends HttpServlet{
     	super.init();
     	DaoFactory daoF = DaoFactory.getInstance(); //création instance DaoFactory
     	userDaoImpl = new UserDaoImpl(daoF);
-    	hc = new HashClass();
     }
 
 	/**
@@ -52,8 +51,7 @@ public class Login extends HttpServlet{
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String login = request.getParameter("txtLogin");
 		String password = request.getParameter("txtPassword");
-		String hashMdp = HashClass.sha1(password);
-		User connectedUser = userDaoImpl.isValidLogin(login, hashMdp);
+		User connectedUser = userDaoImpl.isValidLogin(login, password);
 		HttpSession session = request.getSession();
 		String typePage = "pageJoueur";
 		if (connectedUser != null){

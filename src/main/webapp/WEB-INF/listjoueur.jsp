@@ -18,7 +18,7 @@
   
   <div class="starter-template">
     <h1>Liste des joueurs</h1>
-    <p class="lead">Bienvenue .... Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolor.</p>
+  <img class="mb-4" src="tennis-5782695_1920.jpg" style="width:500px; height:auto;"  alt="image1">
   </div>
 
 
@@ -28,6 +28,16 @@
 <div style="    padding: 1.5rem;    margin-right: 0;    margin-left: 0;    border-width: .2rem;">
 <a class="btn btn-primary" href="/Appli_tennis/AjouterJoueur" role="button">Ajouter un joueur</a>
 </div>
+
+<form class="needs-validation "  novalidate method="post" action="ListJoueur">
+<p>Selectionnez un genre </p>
+<select class="custom-select" id="inputChoixSexe" name="inputChoixSexe" style="width:400px;" required>
+      <option <c:if test="${ choixSexe.equals('Tous')}"> selected</c:if> value="Tous">Tous</option>
+      <option <c:if test="${ choixSexe.equals('F')}"> selected</c:if> value="F">Femmes</option>
+	  <option <c:if test="${ choixSexe.equals('H')}"> selected</c:if> value="H">Hommes</option>
+</select>
+<button class="btn btn-primary center" type="submit">Valider la sélection</button>
+</form>
 
     <p><c:if test="${liste[0] == null}"><strong>Aucun joueur ne correspond à votre recherche</strong></c:if></p>
     
@@ -46,16 +56,30 @@
   <tbody>
    
 	    <c:forEach var="joueur" items="${liste}">
-	    <tr>
-	      <th ><c:out value="${joueur.getId()}"></c:out></th>
-	      <td ><c:out value="${joueur.getNom()}"></c:out></td>
-	      <td ><c:out value="${joueur.getPrenom()}"></c:out></td>
-	      <td ><c:out value="${joueur.getSexe()}"></c:out></td>
-		  <td>
-		    <a type="submit" class="btn btn-outline-primary" href="/Appli_tennis/ModifierJoueur?id=${joueur.getId()}" role="button">Modifier</a>
-			<a type="submit" class="btn btn-outline-primary" href="/Appli_tennis/SupprimerJoueur?id=${joueur.getId()}" role="button">Supprimer</a>
-		  </td>
-	    </tr>
+		    <c:if test="${joueur.getSexe().equals(choixSexe)}">
+			    <tr>
+			      <th ><c:out value="${joueur.getId()}"></c:out></th>
+			      <td ><c:out value="${joueur.getNom()}"></c:out></td>
+			      <td ><c:out value="${joueur.getPrenom()}"></c:out></td>
+			      <td ><c:out value="${joueur.getSexe()}"></c:out></td>
+				  <td>
+				    <a type="submit" class="btn btn-outline-primary" href="/Appli_tennis/ModifierJoueur?id=${joueur.getId()}" role="button">Modifier</a>
+					<a type="submit" class="btn btn-outline-primary" href="/Appli_tennis/SupprimerJoueur?id=${joueur.getId()}" role="button">Supprimer</a>
+				  </td>
+			    </tr>
+		    </c:if>
+		    <c:if test="${choixSexe.equals('Tous')}">
+			    <tr>
+			      <th ><c:out value="${joueur.getId()}"></c:out></th>
+			      <td ><c:out value="${joueur.getNom()}"></c:out></td>
+			      <td ><c:out value="${joueur.getPrenom()}"></c:out></td>
+			      <td ><c:out value="${joueur.getSexe()}"></c:out></td>
+				  <td>
+				    <a type="submit" class="btn btn-outline-primary" href="/Appli_tennis/ModifierJoueur?id=${joueur.getId()}" role="button">Modifier</a>
+					<a type="submit" class="btn btn-outline-primary" href="/Appli_tennis/SupprimerJoueur?id=${joueur.getId()}" role="button">Supprimer</a>
+				  </td>
+			    </tr>
+		    </c:if>
 	    </c:forEach>
   </tbody>
 </table>

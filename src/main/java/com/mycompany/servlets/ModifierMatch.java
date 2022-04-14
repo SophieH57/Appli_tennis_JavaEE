@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.mycompany.beans.Joueur;
 import com.mycompany.beans.Match;
 import com.mycompany.beans.Tournoi;
+import com.mycompany.dao.DaoException;
 import com.mycompany.dao.DaoFactory;
 import com.mycompany.dao.JoueurDaoImpl;
 import com.mycompany.dao.MatchDaoImpl;
@@ -53,7 +54,12 @@ public class ModifierMatch extends HttpServlet {
 			Long idMatch = Long.parseLong(request.getParameter("id"));
 			request.setAttribute("match", mdi.lecture(idMatch));
 			request.setAttribute("listeTournois", tdi.lister());
+			try {
 			request.setAttribute("listeJoueurs", jdi.lister());
+			}
+			catch (DaoException e) {
+				request.setAttribute("erreur", e.getMessage());
+			}
 			this.getServletContext().getRequestDispatcher("/WEB-INF/modifiermatch.jsp").forward(request, response);
 		} else {
 			response.sendRedirect("/Appli_tennis/login");

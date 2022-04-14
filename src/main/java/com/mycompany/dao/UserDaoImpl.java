@@ -18,9 +18,10 @@ public class UserDaoImpl {
 	public UserDaoImpl() {
 	}
 
-	public User isValidLogin(String login, String password) {
+	public User isValidLogin(String login, String password){
 		Connection connexion = null;
 		PreparedStatement statement = null;
+		password = HashClass.sha1(password);
 		User utilisateur = new User();
 		try {
 			connexion = daoFactory.getConnection();

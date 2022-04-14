@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.mycompany.beans.Joueur;
 import com.mycompany.beans.Match;
 import com.mycompany.beans.Tournoi;
+import com.mycompany.dao.DaoException;
 import com.mycompany.dao.DaoFactory;
 import com.mycompany.dao.JoueurDaoImpl;
 import com.mycompany.dao.MatchDaoImpl;
@@ -51,7 +52,12 @@ public class AjouterMatch extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		if (request.getSession().getAttribute("utilisateur") != null) {
 			request.setAttribute("listeTournois", tdi.lister());
-			request.setAttribute("listeJoueurs", jdi.lister());
+			try {
+				request.setAttribute("listeJoueurs", jdi.lister());				
+			}
+			catch (DaoException e) {
+				request.setAttribute("erreur", e.getMessage());
+			}
 			this.getServletContext().getRequestDispatcher("/WEB-INF/ajoutermatch.jsp").forward(request, response);
 		} else {
 			response.sendRedirect("/Appli_tennis/login");

@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mycompany.beans.BeanException;
 import com.mycompany.beans.Joueur;
 
 public class JoueurDaoImpl implements JoueurDao {
@@ -22,7 +23,7 @@ public class JoueurDaoImpl implements JoueurDao {
 	
 	//récupérer la liste de tous les joueurs de la base de données
 	@Override
-	public List<Joueur> lister() {
+	public List<Joueur> lister() throws DaoException{
 		ArrayList<Joueur> listeJoueurPerso= new ArrayList<Joueur>();
 		try {
 			connexion = daoFactory.getConnection();
@@ -36,17 +37,28 @@ public class JoueurDaoImpl implements JoueurDao {
 				j.setSexe(rs.getString("joueur.sexe"));
 				listeJoueurPerso.add(j);
 				}
-			connexion.close();
+		}
+			catch (BeanException be) {
+				System.out.println(be.getMessage());
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new DaoException("Impossible de communiquer avec la base de données");
+		}
+		finally {
+			try {
+				if (connexion != null) {
+					connexion.close();
+				}
+			}
+			catch (SQLException e) {
+				throw new DaoException("Impossible de communiquer avec la base de données");
+			}
 		}
 		return listeJoueurPerso;
 	}
 	
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 	//ajouter un joueur à la base de données
-	public void ajouterJoueur(Joueur nouveauJoueur) {
+	public void ajouterJoueur(Joueur nouveauJoueur) throws DaoException{
 		try {
 			connexion = daoFactory.getConnection();
 	        PreparedStatement pstmt = connexion.prepareStatement("INSERT INTO joueur (NOM, PRENOM, SEXE) values (?, ?, ?)");
@@ -85,14 +97,14 @@ public class JoueurDaoImpl implements JoueurDao {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//mettre à jour les données d'un joueur
-	public void updateJoueur(Long id, String nom, String prenom, String sexe) {
+	public void updateJoueur(Joueur j) throws DaoException {
 		try {
 			connexion = daoFactory.getConnection();
 			PreparedStatement pstmt = connexion.prepareStatement("UPDATE joueur SET NOM = ?, PRENOM = ? , SEXE= ? where ID = ?");
-			pstmt.setString(1, nom);
-			pstmt.setString(2, prenom);
-			pstmt.setString(3, sexe);
-			pstmt.setLong(4, id);
+			pstmt.setString(1, j.getNom());
+			pstmt.setString(2, j.getPrenom());
+			pstmt.setString(3, j.getSexe());
+			pstmt.setLong(4, j.getId());
 			pstmt.executeUpdate();
 			
 			connexion.close();
@@ -198,6 +210,9 @@ public class JoueurDaoImpl implements JoueurDao {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+		catch (BeanException be) {
+			System.out.println(be.getMessage());
 		}
 		return listeJoueurRecherche;
 	}

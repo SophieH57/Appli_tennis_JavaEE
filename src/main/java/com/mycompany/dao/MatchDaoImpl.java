@@ -5,7 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.mycompany.beans.Joueur;
 import com.mycompany.beans.Match;
@@ -287,4 +290,24 @@ public class MatchDaoImpl implements MatchDao{
 					
 		return listeMatchRechercher;
 	}
+	
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//Récupérer les années
+	public Set<String> listingAnnees(){
+		Set<String> listeAnnees = new HashSet<String>();
+		try {
+			connexion = daoFactory.getConnection();
+			PreparedStatement ps = connexion.prepareStatement("select annee from epreuve");
+			ResultSet rsListeAnnees = ps.executeQuery();
+			while(rsListeAnnees.next()) {
+				Integer annee = rsListeAnnees.getInt("annee");
+				listeAnnees.add(Integer.toString(annee));
+			}
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+				
+	return listeAnnees;
+}
 }

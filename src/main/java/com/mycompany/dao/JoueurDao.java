@@ -5,10 +5,10 @@ import java.util.List;
 import com.mycompany.beans.Joueur;
 
 public interface JoueurDao {
-	List <Joueur> lister();
+	List <Joueur> lister() throws DaoException;
 	Joueur lecture(Long id);
-	void ajouterJoueur(Joueur nouveauJoueur);
-	void updateJoueur(Long id, String nom, String prenom, String sexe);
+	void ajouterJoueur(Joueur nouveauJoueur) throws DaoException;
+	void updateJoueur(Joueur j) throws DaoException;
 	void deleteJoueur(Long id);
 	List <Joueur> rechercher(String txt);
 }

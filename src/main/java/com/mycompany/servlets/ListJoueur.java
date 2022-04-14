@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.mycompany.dao.DaoException;
 import com.mycompany.dao.DaoFactory;
 import com.mycompany.dao.JoueurDaoImpl;
 
@@ -40,10 +41,18 @@ public class ListJoueur extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String choixSexe = request.getParameter("inputChoixSexe");
+		request.setAttribute("choixSexe", choixSexe);
 		if (request.getSession().getAttribute("utilisateur") != null) {
+			try {
 		request.setAttribute("liste", jdi.lister());
-		request.getSession().setAttribute("page", typePage);
-		this.getServletContext().getRequestDispatcher("/WEB-INF/listjoueur.jsp").forward(request, response);
+			}
+			catch (DaoException e) {
+				request.setAttribute("erreur", e.getMessage());
+			}
+			request.getSession().setAttribute("page", typePage);
+		
+			this.getServletContext().getRequestDispatcher("/WEB-INF/listjoueur.jsp").forward(request, response);
 	} else {
 		response.sendRedirect("/Appli_tennis/login");
 	}
@@ -53,8 +62,11 @@ public class ListJoueur extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.setAttribute("liste", jdi.rechercher(request.getParameter("txtsearch")));
-		this.getServletContext().getRequestDispatcher("/WEB-INF/listjoueur.jsp").forward(request, response);
+//		String choixSexe = request.getParameter("inputChoixSexe");
+//		request.setAttribute("choixSexe", choixSexe);
+//		request.setAttribute("liste", jdi.rechercher(request.getParameter("txtsearch")));
+//		this.getServletContext().getRequestDispatcher("/WEB-INF/listjoueur.jsp").forward(request, response);
+		doGet(request, response);
 	}
 
 }

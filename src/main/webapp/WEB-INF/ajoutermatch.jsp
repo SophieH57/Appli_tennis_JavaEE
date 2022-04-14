@@ -103,7 +103,7 @@
     </div>  
     </div> 
   
-  <button class="btn btn-primary center" type="submit">Enregistrer le match</button>
+  <button class="btn btn-primary center mb-10" type="submit">Enregistrer le match</button>
 </form>
 
   </div>

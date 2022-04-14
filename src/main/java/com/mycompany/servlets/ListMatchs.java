@@ -39,9 +39,20 @@ public class ListMatchs extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String choixTypeJoueur = request.getParameter("inputChoix");
+		String anneeChoisie = request.getParameter("choixAnnee");
+		String epreuveChoisie = request.getParameter("choixEpreuve");
+		if (choixTypeJoueur == null) choixTypeJoueur = "Tous";
+		if (anneeChoisie == null) anneeChoisie = "Toutes";
+		if (epreuveChoisie == null) epreuveChoisie = "Toutes";
+		System.err.println(choixTypeJoueur + " "+ anneeChoisie + " " + epreuveChoisie);
 		if (request.getSession().getAttribute("utilisateur") != null) {
 			request.setAttribute("listeMatchs", mdi.lister());
+			request.setAttribute("listeAnnees", mdi.listingAnnees());
 			request.getSession().setAttribute("page", typePage);
+			request.setAttribute("choixTypeJoueur", choixTypeJoueur);
+			request.setAttribute("anneeChoisie", anneeChoisie);
+			request.setAttribute("epreuveChoisie", epreuveChoisie);
 			this.getServletContext().getRequestDispatcher("/WEB-INF/listmatchs.jsp").forward(request, response);
 		} else {
 			response.sendRedirect("/Appli_tennis/login");

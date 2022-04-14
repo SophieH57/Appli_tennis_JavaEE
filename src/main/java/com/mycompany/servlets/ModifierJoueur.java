@@ -7,6 +7,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.mycompany.beans.BeanException;
+import com.mycompany.beans.Joueur;
+import com.mycompany.dao.DaoException;
 import com.mycompany.dao.DaoFactory;
 import com.mycompany.dao.JoueurDaoImpl;
 
@@ -52,12 +55,18 @@ public class ModifierJoueur extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String nom = request.getParameter("modifNom");
-		String prenom = request.getParameter("modifPrenom");
-		String sexe = request.getParameter("modifSexe");
-		Long id = Long.parseLong(request.getParameter("modifId"));
-		jdi.updateJoueur(id, nom, prenom, sexe);
-		response.sendRedirect("/Appli_tennis/ListJoueur");
+		try {	
+			Joueur jModif = new Joueur();
+			jModif.setNom(request.getParameter("modifNom"));
+			jModif.setPrenom(request.getParameter("modifPrenom"));
+			jModif.setSexe(request.getParameter("modifSexe"));
+			jModif.setId(Long.parseLong(request.getParameter("modifId")));
+			jdi.updateJoueur(jModif);
+			response.sendRedirect("/Appli_tennis/ListJoueur");
+		} catch (BeanException | DaoException e) {
+			request.setAttribute("erreur", e.getMessage());
+			this.getServletContext().getRequestDispatcher("/WEB-INF/modifierjoueur.jsp").forward(request, response);
+		}
 	}
 
 }
