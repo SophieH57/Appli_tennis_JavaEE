@@ -71,7 +71,7 @@
     <div class="col-md-3 mb-3">
       <label for="vainqueur">Nom du vainqueur</label>
       <select class="custom-select" id="validationCustom04" name="vainqueur" style="width:400px;" required>
-        <option selected disabled  >Sélectioner le vainqueur</option>
+        <option selected disabled  >Selectioner le vainqueur</option>
         <c:forEach var="joueur" items="${listeJoueurs}">
         	<option value="${joueur.id}"><c:out value="${joueur.nom}  ${joueur.prenom}"></c:out></option>
         </c:forEach>
@@ -89,7 +89,7 @@
     <div class="col-md-3 mb-3">
       <label for="finaliste">Nom du finaliste</label>
       <select class="custom-select" id="validationCustom04" name="finaliste" style="width:400px;" required>
-        <option selected disabled  >Sélectioner le finaliste</option>
+        <option selected disabled  >Selectioner le finaliste</option>
         <c:forEach var="joueur" items="${listeJoueurs}">
         	<option value="${joueur.id}"><c:out value="${joueur.nom}  ${joueur.prenom}"></c:out></option>
         </c:forEach>
@@ -103,7 +103,7 @@
     </div>  
     </div> 
   
-  <button class="btn btn-primary center mb-10" type="submit">Enregistrer le match</button>
+  <button class="btn btn-primary center mb-10" type="submit">Ajouter</button>
 </form>
 
   </div>

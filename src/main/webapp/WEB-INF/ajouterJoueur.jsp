@@ -34,7 +34,7 @@
   </div> 
   <div class="form-row">
 	<div class="col-md-4 mb-3">
-	  <label for="inputPrenom">Prénom du joueur</label>
+	  <label for="inputPrenom">Prenom du joueur</label>
 	  <input type="text" class="form-control" style="width:400px;" id="validationCustom02" name="inputPrenom" required>
 	  <div class="valid-feedback">
        Très bien!
@@ -45,7 +45,7 @@
     <div class="col-md-3 mb-3">
       <label for="inputSexe">Sexe</label>
       <select class="custom-select" id="validationCustom04" name="inputSexe" style="width:400px;" required>
-        <option selected disabled  >Sélectioner...</option>
+        <option selected disabled  >Selectioner...</option>
         <option value="F">Femme</option>
 		<option value="H">Homme</option>
       </select>
@@ -58,7 +58,7 @@
     </div>  
     </div>
   
-  <button class="btn btn-primary center" type="submit">Submit form</button>
+  <button class="btn btn-primary center" type="submit">Ajouter</button>
 </form>
 
   </div>

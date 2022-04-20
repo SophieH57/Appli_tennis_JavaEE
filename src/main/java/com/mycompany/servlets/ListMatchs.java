@@ -45,7 +45,6 @@ public class ListMatchs extends HttpServlet {
 		if (choixTypeJoueur == null) choixTypeJoueur = "Tous";
 		if (anneeChoisie == null) anneeChoisie = "Toutes";
 		if (epreuveChoisie == null) epreuveChoisie = "Toutes";
-		System.err.println(choixTypeJoueur + " "+ anneeChoisie + " " + epreuveChoisie);
 		if (request.getSession().getAttribute("utilisateur") != null) {
 			request.setAttribute("listeMatchs", mdi.lister());
 			request.setAttribute("listeAnnees", mdi.listingAnnees());

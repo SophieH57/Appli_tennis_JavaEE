@@ -101,7 +101,7 @@
     </div>  
     </div> 
   
-  <button class="btn btn-primary center" type="submit">Modifier le match</button>
+  <button class="btn btn-primary center" type="submit">Editer</button>
 </form>
 
   </div>

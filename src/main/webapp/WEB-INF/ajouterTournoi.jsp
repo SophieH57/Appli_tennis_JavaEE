@@ -42,7 +42,7 @@
 	</div>
    </div> 
   
-  <button class="btn btn-primary center" type="submit">Submit form</button>
+  <button class="btn btn-primary center" type="submit">Ajouter</button>
 </form>
 
   </div>

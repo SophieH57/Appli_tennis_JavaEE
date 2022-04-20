@@ -48,7 +48,7 @@
 	</div>
    </div> 
   
-  <button class="btn btn-primary center" type="submit">Submit form</button>
+  <button class="btn btn-primary center" type="submit">Editer</button>
 </form>
 
    <div>

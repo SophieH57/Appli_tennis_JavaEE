@@ -32,28 +32,33 @@
 </div>
 
 <form class="needs-validation "  novalidate method="post" action="ListMatchs" style="display : flex;">
-
-	<select class="custom-select" id="validationCustom04" name="inputChoix" style="width:400px; margin-right: 5px;" required>
-		<option selected disabled  >Selectionner vainqueurs et/ou finalistes</option>
+<div>
+	<p>Selectionner vainqueurs et/ou finalistes</p>
+	<select class="custom-select" id="validationCustom04" name="inputChoix" style="width:300px; margin-right: 10px;" required>
 	    <option <c:if test="${ choixTypeJoueur.equals('Tous')}"> selected</c:if> value="Tous">Tous</option>
 	    <option <c:if test="${ choixTypeJoueur.equals('Vainqueurs')}"> selected</c:if> value="Vainqueurs">Vainqueurs</option>
 	  	<option <c:if test="${ choixTypeJoueur.equals('Finalistes')}"> selected</c:if> value="Finalistes">Finalistes</option>
 	</select>
+</div>
 
-	<select class="custom-select" id="validationCustom04" name="choixAnnee" style="width:400px; margin-right: 5px;" required>
-		<option selected disabled  >Sélectionner une année</option>
+<div>
+	<p>Sélectionner une année</p>
+	<select class="custom-select" id="validationCustom04" name="choixAnnee" style="width:300px; margin-right: 10px;" required>
         <option <c:if test="${anneeChoisie.equals('Toutes')}">selected</c:if> value="Toutes">Toutes</option>
         <c:forEach var="annee" items="${listeAnnees}">
         	<option <c:if test="${anneeChoisie.equals(annee)}">selected</c:if> value="${annee}"><c:out value="${annee}"></c:out></option>
         </c:forEach>
 	</select>
+</div>
 
-	<select class="custom-select" id="validationCustom04" name="choixEpreuve" style="width:400px; margin-right: 5px;" required>
-		<option selected disabled  >Sélectionner un type d'épreuve</option>
+<div>
+	<p>Sélectionner un type d'épreuve</p>
+	<select class="custom-select" id="validationCustom04" name="choixEpreuve" style="width:300px; margin-right: 10px;" required>
         <option <c:if test="${epreuveChoisie.equals('Toutes')}">selected</c:if> value="Toutes">Toutes</option>
    		<option <c:if test="${ epreuveChoisie.equals('F')}"> selected</c:if> value="F">F</option>
 	  	<option <c:if test="${ epreuveChoisie.equals('H')}"> selected</c:if> value="H">H</option>
 	</select>
+</div>
 		<button class="btn btn-primary center" type="submit">Valider la sélection</button>
 </form>
 
